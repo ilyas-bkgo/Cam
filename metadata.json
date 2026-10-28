@@ -1,0 +1,8 @@
+{
+  "name": "VigiCam Sécurité - Installation & Maintenance Caméras",
+  "description": "Expert en installation, maintenance et dépannage d'urgence de systèmes de caméras de surveillance pour particuliers et entreprises. Portail client et espace administrateur.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "entities": {
+    "Quote": {
+      "title": "Quote",
+      "description": "Demande de devis pour installation ou rénovation de caméras",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "trackingCode": { "type": "string" },
+        "clientName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 200 },
+        "propertyType": { "type": "string", "enum": ["maison", "appartement", "commerce", "entrepot", "immeuble", "chantier"] },
+        "cameraCount": { "type": "number" },
+        "resolution": { "type": "string", "enum": ["2K", "4K", "8K_Ultra", "Thermique"] },
+        "storagePreference": { "type": "string", "enum": ["nvr_local", "cloud_securise", "hybride"] },
+        "needsAiDetection": { "type": "boolean" },
+        "needsNightColor": { "type": "boolean" },
+        "needsRemoteApp": { "type": "boolean" },
+        "estimatedPrice": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["nouveau", "en_etude", "devis_transmis", "accepte", "refuse"] },
+        "adminNotes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["trackingCode", "clientName", "email", "phone", "propertyType", "cameraCount", "status", "createdAt"]
+    },
+    "Intervention": {
+      "title": "Intervention",
+      "description": "Demande de maintenance préventive ou dépannage d'urgence",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "trackingCode": { "type": "string" },
+        "clientName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 200 },
+        "issueType": { "type": "string", "enum": ["camera_offline", "black_screen", "recording_failure", "network_issue", "vandalism", "maintenance_preventive", "autre"] },
+        "priority": { "type": "string", "enum": ["urgente", "haute", "normale", "basse"] },
+        "description": { "type": "string", "maxLength": 1000 },
+        "preferredDate": { "type": "string", "maxLength": 50 },
+        "timeSlot": { "type": "string", "enum": ["matin", "apres_midi", "express_2h", "nuit_astreinte"] },
+        "status": { "type": "string", "enum": ["en_attente", "planifie", "en_route", "en_cours", "resolu", "annule"] },
+        "technician": { "type": "string", "maxLength": 100 },
+        "adminNotes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["trackingCode", "clientName", "email", "phone", "issueType", "priority", "description", "status", "createdAt"]
+    },
+    "Camera": {
+      "title": "Camera",
+      "description": "Article du catalogue matériel de vidéosurveillance",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 120 },
+        "category": { "type": "string", "enum": ["dome", "bullet", "ptz", "nvr", "solar_4g", "thermal"] },
+        "resolution": { "type": "string", "maxLength": 50 },
+        "nightVision": { "type": "string", "maxLength": 100 },
+        "price": { "type": "number" },
+        "installationIncluded": { "type": "boolean" },
+        "features": { "type": "string", "maxLength": 300 },
+        "inStock": { "type": "boolean" },
+        "badge": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["name", "category", "resolution", "price", "inStock"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Avis client certifié",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "author": { "type": "string", "maxLength": 100 },
+        "companyOrRole": { "type": "string", "maxLength": 100 },
+        "location": { "type": "string", "maxLength": 100 },
+        "rating": { "type": "number" },
+        "content": { "type": "string", "maxLength": 1000 },
+        "date": { "type": "string", "maxLength": 50 },
+        "serviceType": { "type": "string", "maxLength": 100 },
+        "verified": { "type": "boolean" }
+      },
+      "required": ["author", "rating", "content", "serviceType"]
+    }
+  },
+  "firestore": {
+    "/quotes/{quoteId}": {
+      "schema": "Quote",
+      "description": "Demandes de devis créées par les clients et gérées par l'admin"
+    },
+    "/interventions/{interventionId}": {
+      "schema": "Intervention",
+      "description": "Tickets d'intervention de maintenance et dépannage"
+    },
+    "/cameras/{cameraId}": {
+      "schema": "Camera",
+      "description": "Catalogue de matériel consultable publiquement et éditable par admin"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "Testimonial",
+      "description": "Avis clients consultables publiquement"
+    }
+  }
+}

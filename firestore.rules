@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default safety catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Quotes collection: public can submit quote leads and lookup tracking code; only authenticated admin can update/delete
+    match /quotes/{quoteId} {
+      allow read: if true;
+      allow create: if incoming().clientName is string &&
+                      incoming().clientName.size() <= 100 &&
+                      incoming().email is string &&
+                      incoming().phone is string &&
+                      incoming().trackingCode is string;
+      allow update, delete: if isAuthenticated();
+    }
+
+    // Interventions: clients can submit maintenance tickets; only authenticated admin can update/delete
+    match /interventions/{interventionId} {
+      allow read: if true;
+      allow create: if incoming().clientName is string &&
+                      incoming().clientName.size() <= 100 &&
+                      incoming().email is string &&
+                      incoming().phone is string &&
+                      incoming().trackingCode is string;
+      allow update, delete: if isAuthenticated();
+    }
+
+    // Cameras catalog: public can view, authenticated admin can manage
+    match /cameras/{cameraId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Testimonials: public can view & submit reviews, authenticated admin can edit/delete
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow create: if incoming().author is string && incoming().content is string;
+      allow update, delete: if isAuthenticated();
+    }
+  }
+}
+
